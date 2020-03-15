@@ -1,83 +1,198 @@
+Skip to content
+￼￼
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+￼ 
+leechaohua
+/
+lede
+forked from coolsnowwolf/lede
+ Watch 0
+￼ Star0 Fork8k
+ Code Pull requests 0 Actions Projects 0 Wiki Security Insights Settings
+lede
+/
+.github
+/
+workflows
+/
+￼
+Cancel
+￼ Edit file ￼ Preview changes
+￼￼￼
+1
 #
+2
 # This is free software, lisence use MIT.
+3
 # 
+4
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
+5
 # Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
+6
 # 
+7
 # <https://github.com/KFERMercer/OpenWrt-CI>
+8
 # 
-
+9
+​
+10
 name: OpenWrt-CI
-
+11
+​
+12
 on:
+13
   schedule:
+14
     - cron: 0 20 * * *
-
+15
+​
+16
 jobs:
-
+17
+​
+18
   build:
-
+19
+​
+20
     runs-on: ubuntu-latest
-
+21
+​
+22
     steps:
+23
       - name: Checkout
+24
         uses: actions/checkout@master
+25
         with:
+26
           ref: master
-
+27
+​
+28
       - name: Space cleanup
+29
         env:
+30
           DEBIAN_FRONTEND: noninteractive
+31
         run: |
+32
           docker rmi `docker images -q`
+33
           sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
+34
           sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+35
           sudo -E apt-get update
+36
           sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
+37
           sudo -E apt-get -y autoremove --purge
+38
           sudo -E apt-get clean
-
+39
+​
+40
           # 利用挂载在 /mnt/ 的 14G 额外空间:
+41
           # sudo mkdir -p -m 777 /mnt/openwrt/bin /mnt/openwrt/build_dir/host /mnt/openwrt/build_dir/hostpkg /mnt/openwrt/dl /mnt/openwrt/feeds /mnt/openwrt/staging_dir
+42
           # ln -s /mnt/openwrt/bin ./bin
+43
           # mkdir -p ./build_dir/host && ln -s /mnt/openwrt/build_dir/host ./build_dir/host
+44
           # mkdir -p ./build_dir/host && ln -s /mnt/openwrt/build_dir/hostpkg ./build_dir/hostpkg
+45
           # ln -s /mnt/openwrt/dl ./dl
+46
           # ln -s /mnt/openwrt/feeds ./feeds
+47
           # ln -s /mnt/openwrt/staging_dir ./staging_dir
-
+48
+​
+49
           df -h
-
+50
+​
+51
       - name: Update feeds
+52
         run: |
+53
           ./scripts/feeds update -a
+54
           ./scripts/feeds install -a
-
+55
+​
+56
       - name: Generate configuration file
+57
         run: make defconfig
-
+58
+​
+59
       - name: Make download
+60
         run: |
+61
           make download -j8
+62
           find dl -size -1024c -exec rm -f {} \;
+Use Control + Space to trigger autocomplete in most situations.
+￼ Marketplace
+￼ Documentation
+￼
+Featured Actions
+￼
+￼ Setup Node.js for use with actions
+By actions 
 
-      - name: Compile firmware
-        run: |
-          make -j$(nproc) || make -j1 V=s
-          echo "======================="
-          echo "Space usage:"
-          echo "======================="
-          df -h
-          echo "======================="
-          du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
-          du -h --max-depth=1 ./build_dir
-          du -h --max-depth=1 ./bin
+Setup a Node.js environment and add it to the PATH, additionally providing proxy support
 
-      - name: Prepare artifact
-        run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
+ 370
+￼
+￼ Upload artifact
+By actions 
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: OpenWrt firmware
-          path: ./bin/targets/
+Publish files as workflow artifacts
+
+ 333
+￼
+￼ Setup Go for use with actions
+By actions 
+
+Setup a Go environment and add it to the PATH, additionally providing proxy support
+
+ 154
+￼
+￼ Download artifact
+By actions 
+
+Download workflow artifacts
+
+ 104
+￼
+￼ GraphQL query
+By helaili
+
+An action that acts a client for GitHub's GraphQL API
+
+ 52
+Featured categories
+￼ Code quality
+￼ Continuous integration
+￼ Deployment
+￼ Monitoring
+￼ Project management
+￼ Testing
+Browse all actions on the GitHub Marketplace
+Start commit 
